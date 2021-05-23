@@ -14,12 +14,16 @@
 use App\Blog;
 use Illuminate\Http\Request;
 
-Route::get('/', function () {
-    return view('main');
+Route::get('/', 'MainController@mainPage');
+Route::get('/about', 'MainController@about');
+
+
+
+Route::get('/blog/{id}', function ($id){
+    $post = DB::table('blogs')->where('id', '=', $id)->first();
+    return view('post',['post'=>$post]);
 });
-Route::get('/about', function (){
-    return view('about');
-});
+
 Route::get('addPost',function (){
     return view('addPost');
 });
@@ -28,6 +32,7 @@ Route::post('addPost',function (Request $request){
     $blog = new Blog();
     $blog->title = $input['title'];
     $blog->content = $input['content'];
+    $blog->bgImage = 'post-bg.jpg';
     $blog->save();
     return 'success';
 });
